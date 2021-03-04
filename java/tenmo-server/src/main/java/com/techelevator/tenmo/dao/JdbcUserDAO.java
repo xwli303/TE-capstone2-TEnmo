@@ -80,6 +80,18 @@ public class JdbcUserDAO implements UserDAO {
 
         return true;
     }
+    
+    
+    public double getBalance(int userId) {
+		String sql = "SELECT balance FROM accounts " + 
+				"JOIN users s ON s.user_id = a.user_id WHERE a.user_id = ?";
+		try {
+			double balance = jdbcTemplate.queryForObject(sql, Double.class, userId);
+			return balance;
+		} catch (DataAccessException e) {
+		return 0;
+	}
+    }
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
@@ -88,6 +100,9 @@ public class JdbcUserDAO implements UserDAO {
         user.setPassword(rs.getString("password_hash"));
         user.setActivated(true);
         user.setAuthorities("USER");
+       // user.setBalance(rs.getDouble("balance"));
         return user;
     }
+
+	
 }

@@ -11,7 +11,8 @@ public class User {
    private String password;
    private boolean activated;
    private Set<Authority> authorities = new HashSet<>();
-
+   private double balance;
+   
    public User() { }
 
    public User(Long id, String username, String password, String authorities) {
@@ -19,6 +20,7 @@ public class User {
       this.username = username;
       this.password = password;
       this.activated = true;
+      
    }
 
    public Long getId() {
@@ -60,12 +62,22 @@ public class User {
    public void setAuthorities(Set<Authority> authorities) {
       this.authorities = authorities;
    }
+      
+	public Double getBalance() {
+		return balance;
+	}
+    	
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+   
 
    public void setAuthorities(String authorities) {
       String[] roles = authorities.split(",");
       for(String role : roles) {
          this.authorities.add(new Authority("ROLE_" + role));
       }
+      
    }
 
    @Override
