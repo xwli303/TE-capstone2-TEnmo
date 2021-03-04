@@ -23,7 +23,7 @@ public class UserController {
 		this.userDAO = userDAO;
 	}
 	//no
-	@RequestMapping(path = "/username", method = RequestMethod.GET)
+	@RequestMapping(path = "/users?username=", method = RequestMethod.GET)
 	public int findIdByUsername(@RequestParam String userName) {
 		int userId = userDAO.findIdByUsername(userName);
 		return userId;
@@ -39,11 +39,14 @@ public class UserController {
 		return userDAO.findByUsername(username);
 	}
 	
+	//does not work
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/users", method = RequestMethod.POST)
-	public boolean create(@RequestBody String username, String password) {
+	public boolean create(@RequestBody User user, String username, @RequestBody String password) {
 		userDAO.create(username, password);
 		return true;
+		//??????????????? 
+		
 	}
 	//yes
 	@RequestMapping(path = "/users/{id}", method = RequestMethod.GET)
