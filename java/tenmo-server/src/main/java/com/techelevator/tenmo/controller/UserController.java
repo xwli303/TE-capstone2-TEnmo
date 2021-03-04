@@ -39,7 +39,7 @@ public class UserController {
 	
 	
 	//yes
-	@RequestMapping(path = "/users/{id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/users/{id}/balances", method = RequestMethod.GET)
 	public double getBalance(@PathVariable Long id) {
 		return accountDAO.getBalance(id);
 	}

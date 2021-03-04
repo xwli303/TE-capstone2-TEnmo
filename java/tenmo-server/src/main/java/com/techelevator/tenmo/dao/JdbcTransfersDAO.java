@@ -39,8 +39,17 @@ public class JdbcTransfersDAO implements TransfersDAO{
 	public Double sendTransfer(Long userId, String userName) {
 		//list all users 
 //		userDAO.listUsersForTransfer(); //returns all users id and usernames
-		int transferAmount = 1000;
-	
+		/*
+		 * two parts with sql 
+		 * 1. insert transfer record into transfers table
+		 * 2. update the balances for sender and user
+		 */
+		double transferAmount; 
+		
+		String sql ;
+
+		
+		
 		
 		return null; //return remaining balance?
 	}
