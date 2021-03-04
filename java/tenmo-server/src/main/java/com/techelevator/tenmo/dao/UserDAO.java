@@ -14,5 +14,5 @@ public interface UserDAO {
 
     boolean create(String username, String password);
     
-    double getBalance(int userId);
+    double getBalance(Long userId);
 }

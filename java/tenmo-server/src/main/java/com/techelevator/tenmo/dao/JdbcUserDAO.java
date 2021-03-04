@@ -82,7 +82,7 @@ public class JdbcUserDAO implements UserDAO {
     }
     
     
-    public double getBalance(int userId) {
+    public double getBalance(Long userId) {
 		String sql = "SELECT balance FROM accounts " + 
 				"JOIN users s ON s.user_id = a.user_id WHERE a.user_id = ?";
 		try {
@@ -90,7 +90,7 @@ public class JdbcUserDAO implements UserDAO {
 			return balance;
 		} catch (DataAccessException e) {
 		return 0;
-	}
+		}
     }
 
     private User mapRowToUser(SqlRowSet rs) {
