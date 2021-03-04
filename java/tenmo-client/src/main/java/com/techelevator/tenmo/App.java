@@ -87,7 +87,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+		System.out.println("Please input user id to transfer to");
+		//list all the users ids and usernames 
 		
+		//(if ..... is not null)
+		//call the transfer method 
 	}
 
 	private void requestBucks() {

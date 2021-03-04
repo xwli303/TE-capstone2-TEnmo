@@ -81,6 +81,17 @@ public class JdbcUserDAO implements UserDAO {
         return true;
     }
     
+    public List<User> listUsersForTransfer() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT user_id, username FROM users;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while(results.next()) {
+            User user = mapIdUsername(results);
+            users.add(user);
+        }
+        return users;
+    }
+    
     
     public double getBalance(Long userId) {
 		String sql = "SELECT balance FROM accounts " + 
@@ -102,7 +113,16 @@ public class JdbcUserDAO implements UserDAO {
         user.setAuthorities("USER");
        // user.setBalance(rs.getDouble("balance"));
         return user;
+        
     }
 
+    //this 
+    private User mapIdUsername(SqlRowSet rs) {
+        User userIdUserName = new User();
+        userIdUserName.setId(rs.getLong("user_id"));
+        userIdUserName.setUsername(rs.getString("username"));
+  
+        return userIdUserName;
+    }
 	
 }
