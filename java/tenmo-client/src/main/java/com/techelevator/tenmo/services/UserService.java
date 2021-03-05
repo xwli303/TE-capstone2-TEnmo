@@ -95,6 +95,12 @@ public class UserService {
 		
 		return transfer;
 	}
+	//user and id to be passed in
+	//public void transferMoney(AuthenticatedUser currentUser, Long recipentId)
+	//HttpEntity entity = createRequestEntity(currentUser); need to make an HTTP helper method
+	//Long userId = currentUser.getUser().getId();
+	//createTransfer(entity, recipientId);
+	
 	
 	
 	

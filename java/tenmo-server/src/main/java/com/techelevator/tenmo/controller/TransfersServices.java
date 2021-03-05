@@ -23,6 +23,7 @@ public class TransfersServices {
 	}
 	
 	@Transactional
+
 	public Double transferMoney(Account account) throws InsufficientFundsException {
 		Double fromBalance = accountDAO.getBalance(account.getUserId());
 		
