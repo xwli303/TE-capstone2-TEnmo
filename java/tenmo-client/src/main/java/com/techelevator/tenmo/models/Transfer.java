@@ -2,12 +2,12 @@ package com.techelevator.tenmo.models;
 
 public class Transfer {
 	
-	private Long transferId;
-	private Long fromAccountId;
-	private Long toAccountId;
+	private Integer transferId;
+	private Integer fromAccountId;
+	private Integer toAccountId;
 	
-	private Long fromUserId;
-	private Long toUserId;
+	private Integer fromUserId;
+	private Integer toUserId;
 	private String fromUsername;
 	private String toUsername;
 	
@@ -17,39 +17,43 @@ public class Transfer {
 	
 	private String transferStatus;
 	
-	public Long getTransferId() {
+	public Integer getTransferId() {
 		return transferId;
 	}
 	
-	public void setTransferId (Long transferId) {
+	public void setTransferId (Integer transferId) {
 		this.transferId = transferId;
 	}
 	
-	public Long getFromAccountId() {
+	public Integer getFromAccountId() {
 		return fromAccountId;
 	}
 	
-	public void setFromAccountId(Long fromAccountId) {
+	public void setFromAccountId(Integer fromAccountId) {
 		this.fromAccountId = fromAccountId;
 	}
 	
-	public Long getToAccountId () {
+	public Integer getToAccountId () {
 		return toAccountId;
 	}
 	
-	public void setToAccountId(Long toAccountId) {
+	public void setToAccountId(Integer toAccountId) {
 		this.toAccountId = toAccountId;
 	}
 	
-	public Long getFromUserId() {
+	public Integer getFromUserId() {
 		return fromUserId;
 	}
+	
+	public void setFromUserId(Integer fromUserId) {
+		this.fromUserId = fromUserId;
+	}
 
-	public Long getToUserId() {
+	public Integer getToUserId() {
 		return toUserId;
 	}
 
-	public void setToUserId(Long toUserId) {
+	public void setToUserId(Integer toUserId) {
 		this.toUserId = toUserId;
 	}
 

@@ -131,14 +131,18 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		// TODO Auto-generated method stub
 		User[] user = userService.getAllUsers();
 		for (User eachUser : user) {
-			System.out.print(eachUser.getId());
+			System.out.print(eachUser.getId() + "    ");
 			System.out.print(eachUser.getUsername());
 			System.out.println();
 		}
-		Integer userInput = console.getUserInputInteger("Select User Id to send money");
+		Integer receiverId = console.getUserInputInteger("Select User Id to send money");
 		
-		//(if ..... is not null)
-		//call the transfer method 
+		Integer senderUserId = currentUser.getUser().getId();
+		
+		Double amount = console.getUserInputDouble("How much do you want to send?");
+		
+		userService.sendBucks(receiverId, senderUserId, amount);
+		
 	}
 
 	private void requestBucks() {

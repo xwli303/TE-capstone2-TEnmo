@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,5 +38,12 @@ public class TransfersController {
 	public Transfer transferDetails (@Valid @PathVariable Long id, @PathVariable Long transferId) {
 		return transferServices.viewTransferDetails(id, transferId);
 		
+	}
+	
+	//client-userservice-sendbucks
+	@RequestMapping(path = "/transfer/{id}", method = RequestMethod.POST)
+	public void sendTransfer (@RequestBody Transfer transfer, @PathVariable Long id) {
+		
+		 transferServices.createTransfer(transfer); //from userId
 	}
 }

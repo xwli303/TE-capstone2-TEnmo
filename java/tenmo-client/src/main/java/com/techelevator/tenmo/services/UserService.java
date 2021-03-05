@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.Transfer;
@@ -72,6 +73,29 @@ public class UserService {
 				HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
 		return transfer;
 	}
+	
+	
+	//send transfer request?? takes user input of user id and amount to server side 
+	public Transfer sendBucks(Integer toUserId, Integer fromUserId, Double amount) {   //do we need the receiver's id??
+		
+		Transfer transfer = new Transfer();
+		transfer.setAmount(amount);
+		transfer.setToUserId(toUserId);
+		transfer.setFromUserId(fromUserId);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+		
+		String url = BASE_URL + "/transfer/" + fromUserId;
+		
+		restTemplate.postForObject(url, entity, Transfer.class);
+		//user number and amount 
+		
+		return transfer;
+	}
+	
 	
 	
 	

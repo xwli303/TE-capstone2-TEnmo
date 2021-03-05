@@ -45,5 +45,15 @@ public class TransfersServices {
 	public Transfer viewTransferDetails (Long userId, Long transferId) {
 		return transfersDAO.viewTransferDetails(transferId);
 	}
+
+	//sender id, receiver id, amount 
+	public void createTransfer(Transfer transfer) {
+		Long senderId = transfer.getFromUserId();
+		Long receiverId = transfer.getToUserId();
+		Double amount = transfer.getAmount();
+		
+		transfersDAO.create(senderId, receiverId, amount); //amount?????
+		
+	}
 	
 }

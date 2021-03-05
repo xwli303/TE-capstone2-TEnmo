@@ -8,7 +8,7 @@ public interface TransfersDAO {
 	
 	Double viewBalance(Long userId);
 	
-	void sendTransfer(Long userId, Double amount);
+	void create(Long userId, Long receiverId, Double amount);
 	
 	List<Transfer> viewTransfers(Long userId);  //view past transfers
 	
