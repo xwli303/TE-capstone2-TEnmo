@@ -50,6 +50,13 @@ public class UserService {
 		return balance;	
 	}
 	
+	//get all users
+	public User[] getAllUsers() {
+		User[] getAllUsers = null;
+		getAllUsers = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, makeAuthEntity(), User[].class).getBody();
+		return getAllUsers;
+	}
+	
 	
 	//get transfers list
 	public Transfer[] allTransfers (Integer userId) {
@@ -75,4 +82,6 @@ public class UserService {
 	     HttpEntity entity = new HttpEntity<>(headers);
 	     return entity;
 	}
+
+	
 }

@@ -2,6 +2,9 @@ package com.techelevator.tenmo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +14,7 @@ import com.techelevator.tenmo.model.Transfer;
 
 
 @RestController
+//@PreAuthorize("isAuthenticated()")
 public class TransfersController {
 	
 	private TransfersServices transferServices;
@@ -20,17 +24,17 @@ public class TransfersController {
 	}
 	
 	@RequestMapping(path = "/users/{id}/getbalances", method = RequestMethod.GET)
-	public double viewBalance (@PathVariable Long id) {
+	public double viewBalance (@PathVariable @Valid Long id) {
 		return transferServices.viewBalances(id);  //userid
 	}
 	
 	@RequestMapping(path = "/users/{id}/all-transfers", method = RequestMethod.GET)
-	public List<Transfer> allTransfers (@PathVariable Long id){
+	public List<Transfer> allTransfers (@PathVariable @Valid Long id){
 		return transferServices.viewTransfers(id);
 	}
 	
 	@RequestMapping(path = "/users/{id}/{transferId}", method = RequestMethod.GET)
-	public Transfer transferDetails (@PathVariable Long id, @PathVariable Long transferId) {
+	public Transfer transferDetails (@Valid @PathVariable Long id, @PathVariable Long transferId) {
 		return transferServices.viewTransferDetails(id, transferId);
 		
 	}

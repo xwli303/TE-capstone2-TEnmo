@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+
 public class User {
 
    private Long id;
-   private String username;
-   private String password;
+   @NotBlank(message = "Username cannot be blank")private String username;
+   @NotBlank(message = "Password cannot be blank")private String password;
    private boolean activated;
    private Set<Authority> authorities = new HashSet<>();
    private double balance;

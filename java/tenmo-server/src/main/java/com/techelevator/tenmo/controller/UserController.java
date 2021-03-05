@@ -2,13 +2,12 @@ package com.techelevator.tenmo.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
+import javax.validation.Valid;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountDAO;
@@ -16,6 +15,7 @@ import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.User;
 
 @RestController
+//@PreAuthorize("isAuthenticated")
 public class UserController {
 	
 	private UserDAO userDAO;
@@ -25,26 +25,25 @@ public class UserController {
 		this.userDAO = userDAO;
 		this.accountDAO = accountDAO;
 	}
-
-	//yes
+//create new object and post through
+	//work on client side to get user and id to use
+	
 	@RequestMapping(path = "/users", method = RequestMethod.GET)
 	public List<User> findAll() {
 		return userDAO.findAll();
 	}
-	//yes
+	
 	@RequestMapping(path = "/{username}", method = RequestMethod.GET)
-	public User findByUsername(@PathVariable String username){
+	public User findByUsername(@Valid @PathVariable String username){
 		return userDAO.findByUsername(username);
 	}
 	
-	
-	//yes
 	@RequestMapping(path = "/users/{id}/balances", method = RequestMethod.GET)
-	public double getBalance(@PathVariable Long id) {
+	public double getBalance(@Valid @PathVariable Long id) {
 		return accountDAO.getBalance(id);
 	}
 	
-	
+}
 	
 
 	
@@ -68,4 +67,4 @@ public class UserController {
 //		int userId = userDAO.findIdByUsername(userName);
 //		return userId;
 //	}
-}
+

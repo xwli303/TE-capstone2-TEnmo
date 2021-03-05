@@ -35,24 +35,40 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		
 	}
 
-	@Override
-	public Double sendTransfer(Long userId, String userName) {
+//	@Override
+	public void sendTransfer(Long userId, Double amount) {
+	}
+//		//account from
+		String sqlFrom = "UPDATE accounts SET balance = (balance - ?) WHERE user_id = ?";
+//		
+//		try {
+//		jdbcTemplate.update(sqlFrom, userId, amount);
+//		
+//		} catch (UserNotFoundException ex) {
+//		
+//		//account to
+		String sqlTo = "UPDATE accounts SET balance = (balance + ?) WHERE user_id = ?";
+//		
+//		try {
+//			jdbcTemplate.update(sqlTo, userId, amount);
+//		}
+
 		//list all users 
 //		userDAO.listUsersForTransfer(); //returns all users id and usernames
 		/*
 		 * two parts with sql 
-		 * 1. insert transfer record into transfers table
-		 * 2. update the balances for sender and user
-		 */
-		double transferAmount; 
-		
-		String sql;
-
-		
-		
-		
-		return null; //return remaining balance?
-	}
+//		 * 1. insert transfer record into transfers table
+//		 * 2. update the balances for sender and user
+//		 */
+//		double transferAmount; 
+//		
+//		String sql;
+//
+//		
+//		
+//		
+//		return null; //return remaining balance?
+//	}
 	
 	@Override
 	public List<Transfer> viewTransfers(Long userId) {  //do we need to pass it through id?

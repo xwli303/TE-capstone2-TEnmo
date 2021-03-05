@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.NotBlank;
+
 public class Transfer {
 	
-	private Long transferId;
+	@NotBlank(message = "ID cannot be blank")private Long transferId;
 	private Long fromAccountId;
 	private Long toAccountId;
 	
