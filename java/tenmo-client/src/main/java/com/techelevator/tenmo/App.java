@@ -110,6 +110,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 				console.getUserInputInteger("Select transfer ID to view Transfer details");
 		if (requestTransferId != null) {
 			Transfer transfer = userService.transferDetails(userId, requestTransferId);
+			System.out.println("Transfer Details");
+			System.out.println("-----------------------------------");
 			System.out.println("ID: " + transfer.getTransferId());
 			System.out.println("From: " + transfer.getFromUsername());
 			System.out.println("To: " + transfer.getToUsername());
