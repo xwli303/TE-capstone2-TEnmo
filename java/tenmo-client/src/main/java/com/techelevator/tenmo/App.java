@@ -91,18 +91,31 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		
 	}
 
-	private void viewTransferHistory() {
-		
+	private void viewTransferHistory() {	
 		Integer userId = currentUser.getUser().getId();
 		Transfer[] allTransfers = userService.allTransfers(userId);
 		
 		System.out.println("Transfer ID    From    To    Amount");
+		System.out.println("-----------------------------------");
 		for (Transfer eachTransfer : allTransfers) {
 			System.out.print(eachTransfer.getTransferId() + "           ");
 			System.out.print(eachTransfer.getFromUsername() + "     ");
 			System.out.print(eachTransfer.getToUsername() + "     " );
 			System.out.print(eachTransfer.getAmount() + "     ");
 			System.out.println();
+		}
+		
+		
+		Integer requestTransferId = 
+				console.getUserInputInteger("Select transfer ID to view Transfer details");
+		if (requestTransferId != null) {
+			Transfer transfer = userService.transferDetails(userId, requestTransferId);
+			System.out.println("ID: " + transfer.getTransferId());
+			System.out.println("From: " + transfer.getFromUsername());
+			System.out.println("To: " + transfer.getToUsername());
+			System.out.println("Type: " + transfer.getTransferType());
+			System.out.println("Status: " + transfer.getTransferStatus());
+			System.out.println("Amount: " + transfer.getAmount());
 		}
 		
 	}

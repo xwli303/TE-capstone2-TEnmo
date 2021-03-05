@@ -46,7 +46,7 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		 */
 		double transferAmount; 
 		
-		String sql ;
+		String sql;
 
 		
 		
@@ -59,14 +59,6 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		// TODO Auto-generated method stub
 		List<Transfer> transfersList = new ArrayList<>();
 		
-//		String sql = "SELECT transfer_id, amount, transfer_type_desc, username AS From, " + 
-//				"(SELECT username FROM users WHERE user_id =" + 
-//				"(SELECT user_id FROM accounts WHERE account_id=t.account_to)) AS To FROM users " + 
-//				"JOIN accounts a ON a.user_id = u.user_id " + 
-//				"JOIN transfers t ON t.account_from = a.account_id " + 
-//				"JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id " + 
-//				"WHERE u.user_id=?";
-		
 		String sql = "SELECT transfer_id, amount, transfer_type_desc, username AS From, "
 				+ "(SELECT username FROM users WHERE user_id =(SELECT user_id FROM accounts WHERE account_id=t.account_to)) "
 				+ "AS To FROM  users u "
@@ -76,21 +68,24 @@ public class JdbcTransfersDAO implements TransfersDAO{
 				+ "WHERE u.user_id = ?";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
 		while (result.next()) {
-			Transfer transfer = mapTransferDetails(result);
+			Transfer transfer = mapRowToTansfers(result);
 			transfersList.add(transfer);		
 		}
 		return transfersList;
 	}
 
+	
+	//this query is a little different because this one shows status
 	@Override
 	public Transfer viewTransferDetails(Long transferId) {
 		String sql = 
-				"SELECT transfer_id, amount, transfer_type_desc, username AS From, "
+				"SELECT transfer_id, amount, transfer_type_desc, transfer_status_desc, username AS From, "
 				+ "(SELECT username FROM users WHERE user_id = "
 				+ "(SELECT user_id FROM accounts WHERE account_id=t.account_to)) "
 				+ "AS To FROM  users u JOIN accounts a ON a.user_id = u.user_id "
 				+ "JOIN transfers t ON t.account_from = a.account_id "
 				+ "JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id "
+				+ "JOIN transfer_statuses ts ON ts.transfer_status_id = t.transfer_status_id "
 				+ "WHERE t.transfer_id = ?";
 				
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
@@ -109,13 +104,17 @@ public class JdbcTransfersDAO implements TransfersDAO{
 	private Transfer mapRowToTansfers(SqlRowSet rowset) {
 		Transfer transfer = new Transfer();
 		transfer.setTransferId(rowset.getLong("transfer_id"));
-		transfer.setFromAccountId(rowset.getLong("account_from"));
-		transfer.setToAccountId(rowset.getLong("account_to"));
 		transfer.setAmount(rowset.getDouble("amount"));
+		transfer.setFromUsername(rowset.getString("from"));
+		transfer.setToUsername(rowset.getString("to"));
+		transfer.setAmount(rowset.getDouble("amount"));
+		transfer.setTransferType(rowset.getString("transfer_type_desc"));
 		return transfer;
 	
 	}
 	
+	//this differs from the map method above slightly because
+	//this one has the transfer status (for transfer details)
 	private Transfer mapTransferDetails(SqlRowSet rowset) {
 		Transfer transfer = new Transfer();
 		transfer.setTransferId(rowset.getLong("transfer_id"));
@@ -124,6 +123,8 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		transfer.setToUsername(rowset.getString("to"));
 		transfer.setAmount(rowset.getDouble("amount"));
 		transfer.setTransferType(rowset.getString("transfer_type_desc"));
+		transfer.setTransferStatus(rowset.getString("transfer_status_desc"));
+		
 		return transfer;
 	}
 	
@@ -133,8 +134,22 @@ public class JdbcTransfersDAO implements TransfersDAO{
 //	public List<Transfers> viewPendingRequests() {
 //		// TODO Auto-generated method stub
 //		return null;
+	
+/*  SELECT transfer_id, amount, transfer_type_desc, transfer_status_desc, username AS From,
+(SELECT username FROM users WHERE user_id =
+(SELECT user_id FROM accounts WHERE account_id=t.account_to)) AS To FROM  users u
+JOIN accounts a ON a.user_id = u.user_id
+JOIN transfers t ON t.account_from = a.account_id
+JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id
+JOIN transfer_statuses ts ON ts.transfer_status_id = t.transfer_status_id
+WHERE u.user_id = 1001 and ts.transfer_status_desc = 'Pending';
+*/	
 //	}
 //
+	
+	
+	
+	
 //	@Override
 //	public void requestTransfers(Long accountId) {
 //		// TODO Auto-generated method stub

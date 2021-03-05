@@ -14,6 +14,7 @@ public class Transfer {
 	private Double amount;
 	
 	private String transferType;
+	private String transferStatus;
 	
 	public Long getTransferId() {
 		return transferId;
@@ -81,6 +82,14 @@ public class Transfer {
 
 	public void setTransferType(String transferType) {
 		this.transferType = transferType;
+	}
+
+	public String getTransferStatus() {
+		return transferStatus;
+	}
+
+	public void setTransferStatus(String transferStatus) {
+		this.transferStatus = transferStatus;
 	}
 	
 	 

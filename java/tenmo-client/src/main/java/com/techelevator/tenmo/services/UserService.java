@@ -59,7 +59,12 @@ public class UserService {
 		return allTransfers;	
 	}
 	
-	
+	public Transfer transferDetails(Integer userId, Integer transferId) {
+		Transfer transfer = null;
+		transfer = restTemplate.exchange(BASE_URL + "/users/" + userId + "/" + transferId, 
+				HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
+		return transfer;
+	}
 	
 	
 	
