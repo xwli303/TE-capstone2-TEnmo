@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransfersDAO;
+import com.techelevator.tenmo.model.Transfer;
 
 @Service
 public class TransfersServices {
@@ -17,13 +20,15 @@ public class TransfersServices {
 		this.accountDAO = accountDAO;
 	}
 	
-	public Double viewBalances (Long userId) {
-		return transfersDAO.viewBalance(userId);
+	public Double viewBalances (Long id) {
+		return transfersDAO.viewBalance(id);
 		
 	}
 	
 	
-	
+	public List<Transfer> viewTransfers(Long userId){
+		return transfersDAO.viewTransfers(userId);
+	}
 	
 	
 	

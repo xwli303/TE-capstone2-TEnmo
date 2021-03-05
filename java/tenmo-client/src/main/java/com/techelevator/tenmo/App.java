@@ -1,6 +1,9 @@
 package com.techelevator.tenmo;
 
+import java.math.BigDecimal;
+
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
@@ -29,16 +32,20 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticationService authenticationService;
 
     private UserService userService;
+    private User user;
     
     
     public static void main(String[] args) {
-    	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
+    	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), 
+    			new UserService (API_BASE_URL));
     	app.run();
+    	
     }
 
-    public App(ConsoleService console, AuthenticationService authenticationService) {
+    public App(ConsoleService console, AuthenticationService authenticationService, UserService userService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+		this.userService = userService;
 	}
 
 	public void run() {
@@ -74,17 +81,10 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewCurrentBalance() {
 		
-//		double balance = 0;
-//		try {
-//			balance = userService.getAccountBalance();
-//		} catch (UserNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		Integer userId = currentUser.getUser().getId();
+		Double balance = userService.getAccountBalance(userId);
 		
-		double balance = userService.getAccountBalance((long) 1001);
-		
-		System.out.println("Your account balance is " + balance);
+		System.out.println("Your current account balance is: " + balance);
 		
 	}
 
