@@ -30,6 +30,8 @@ public class TransfersServices {
 		return transfersDAO.viewTransfers(userId);
 	}
 	
-	
+	public Transfer viewTransferDetails (Long userId, Long transferId) {
+		return transfersDAO.viewTransferDetails(transferId);
+	}
 	
 }

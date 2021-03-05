@@ -84,13 +84,15 @@ public class JdbcTransfersDAO implements TransfersDAO{
 
 	@Override
 	public Transfer viewTransferDetails(Long transferId) {
-		String sql = "SELECT transfer_id, amount, transfer_type_desc, username AS From, " + 
-				"(SELECT username FROM users WHERE user_id = " + 
-				"(SELECT user_id FROM accounts WHERE account_id=t.account_to)) AS To FROM  users " + 
-				"JOIN accounts a ON a.user_id = u.user_id " + 
-				"JOIN transfers t ON t.account_from = a.account_id " + 
-				"JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id " + 
-				"WHERE t.tranfer_id= ?";  //transfer id 
+		String sql = 
+				"SELECT transfer_id, amount, transfer_type_desc, username AS From, "
+				+ "(SELECT username FROM users WHERE user_id = "
+				+ "(SELECT user_id FROM accounts WHERE account_id=t.account_to)) "
+				+ "AS To FROM  users u JOIN accounts a ON a.user_id = u.user_id "
+				+ "JOIN transfers t ON t.account_from = a.account_id "
+				+ "JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id "
+				+ "WHERE t.transfer_id = ?";
+				
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
 		
 		if(result != null) {

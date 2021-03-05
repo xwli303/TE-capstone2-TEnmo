@@ -1,8 +1,10 @@
 package com.techelevator.tenmo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -33,6 +35,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
     private UserService userService;
     private User user;
+    private Transfer transfer;
     
     
     public static void main(String[] args) {
@@ -89,7 +92,18 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+		
+		Integer userId = currentUser.getUser().getId();
+		Transfer[] allTransfers = userService.allTransfers(userId);
+		
+		System.out.println("Transfer ID    From    To    Amount");
+		for (Transfer eachTransfer : allTransfers) {
+			System.out.print(eachTransfer.getTransferId() + "           ");
+			System.out.print(eachTransfer.getFromUsername() + "     ");
+			System.out.print(eachTransfer.getToUsername() + "     " );
+			System.out.print(eachTransfer.getAmount() + "     ");
+			System.out.println();
+		}
 		
 	}
 

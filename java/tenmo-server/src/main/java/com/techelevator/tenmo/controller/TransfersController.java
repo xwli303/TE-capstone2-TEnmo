@@ -29,4 +29,9 @@ public class TransfersController {
 		return transferServices.viewTransfers(id);
 	}
 	
+	@RequestMapping(path = "/users/{id}/{transferId}", method = RequestMethod.GET)
+	public Transfer transferDetails (@PathVariable Long id, @PathVariable Long transferId) {
+		return transferServices.viewTransferDetails(id, transferId);
+		
+	}
 }
