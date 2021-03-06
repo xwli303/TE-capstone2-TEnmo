@@ -135,13 +135,17 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			System.out.print(eachUser.getUsername());
 			System.out.println();
 		}
+		
+		Transfer transferReq = new Transfer();
 		Integer receiverId = console.getUserInputInteger("Select User Id to send money");
-		
 		Integer senderUserId = currentUser.getUser().getId();
-		
 		Double amount = console.getUserInputDouble("How much do you want to send?");
 		
-		userService.sendBucks(receiverId, senderUserId, amount);
+		transferReq.setFromUserId(senderUserId);
+		transferReq.setToUserId(receiverId);
+		transferReq.setAmount(amount);
+		
+		userService.sendBucks(transferReq);
 		
 	}
 

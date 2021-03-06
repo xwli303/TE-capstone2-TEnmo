@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 @Component
 public class JdbcTransfersDAO implements TransfersDAO{
@@ -41,11 +42,11 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		//or should it return a transfer??
 //		//account from
 		String sqlFrom = "UPDATE accounts SET balance = (balance - ?) WHERE user_id = ?";
-		jdbcTemplate.update(sqlFrom, userId, amount);
+		jdbcTemplate.update(sqlFrom,  amount, userId);
 		//account to
 		String sqlTo = "UPDATE accounts SET balance = (balance + ?) WHERE user_id = ?";
-		jdbcTemplate.update(sqlTo, receiverId, amount);
-
+		jdbcTemplate.update(sqlTo,  amount, receiverId);
+		
  
 	
 		/* two parts with sql 

@@ -48,12 +48,9 @@ public class TransfersServices {
 	}
 
 	//sender id, receiver id, amount 
-	public void createTransfer(Transfer transfer) {
-		Long senderId = transfer.getFromUserId();
-		Long receiverId = transfer.getToUserId();
-		Double amount = transfer.getAmount();
-		
-		transfersDAO.create(senderId, receiverId, amount); //amount?????
+	public void createTransfer(Long userId, Long receiverId, Double amount) {
+		transfersDAO.create(userId, receiverId, amount);		
+	
 		
 	}
 	

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 
 
@@ -42,8 +43,18 @@ public class TransfersController {
 	
 	//client-userservice-sendbucks
 	@RequestMapping(path = "/transfer/{id}", method = RequestMethod.POST)
-	public void sendTransfer (@RequestBody Transfer transfer, @PathVariable Long id) {
+	public void sendTransfer (@RequestBody Transfer transfer, @PathVariable Long id, Long receiverId, Double amount) {
 		
-		 transferServices.createTransfer(transfer); //from userId
+		 transferServices.createTransfer(transfer.getToUserId(), transfer.getFromUserId(), transfer.getAmount()); //from userId
+		
 	}
+	/*
+	 * @RequestMapping(method=RequestMethod.POST, value = "/login")
+public ResponseEntity<String> login(@RequestBody String jsonStr) {
+    System.out.println("jsonStr  " + jsonStr);
+    JSONObject jsonObject = new JSONObject(jsonStr);
+    String username = jsonObject.getString("username");
+    return new ResponseEntity<String>(username, HttpStatus.OK);
+}  
+	 */
 }

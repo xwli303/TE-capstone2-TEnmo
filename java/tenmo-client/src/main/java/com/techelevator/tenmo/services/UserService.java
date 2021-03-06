@@ -76,24 +76,20 @@ public class UserService {
 	
 	
 	//send transfer request?? takes user input of user id and amount to server side 
-	public Transfer sendBucks(Integer toUserId, Integer fromUserId, Double amount) {   //do we need the receiver's id??
-		
-		Transfer transfer = new Transfer();
-		transfer.setAmount(amount);
-		transfer.setToUserId(toUserId);
-		transfer.setFromUserId(fromUserId);
+	public void sendBucks(Transfer transfer) {   //do we need the receiver's id??
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(AUTH_TOKEN);
 		
-		HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+		HttpEntity <Transfer> entity = new HttpEntity<>(transfer, headers);
 		
-		String url = BASE_URL + "/transfer/" + fromUserId;
+		String url = BASE_URL + "/transfer/" + transfer.getFromUserId();
 		
 		restTemplate.postForObject(url, entity, Transfer.class);
-		//user number and amount 
+
 		
-		return transfer;
+		
 	}
 	//user and id to be passed in
 	//public void transferMoney(AuthenticatedUser currentUser, Long recipentId)
