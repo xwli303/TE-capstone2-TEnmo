@@ -45,10 +45,14 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		jdbcTemplate.update(sqlFrom,  amount, userId);
 		//account to
 		String sqlTo = "UPDATE accounts SET balance = (balance + ?) WHERE user_id = ?";
-		jdbcTemplate.update(sqlTo,  amount, receiverId);
+		jdbcTemplate.update(sqlTo,  amount, receiverId);		
+		//inserting into the transfer table
+		String sqlTransfer = "INSERT INTO transfers (transfer_type_id, transfer_status_id, "
+				+ "account_from, account_to, amount) " + 
+				"VALUES (2, 2, (SELECT account_id FROM accounts WHERE user_id = ?), "
+				+ "(SELECT account_id FROM accounts WHERE user_id = ?), ?)";
+		jdbcTemplate.update(sqlTransfer, userId, receiverId, amount);
 		
- 
-	
 		/* two parts with sql 
 		 * 1. insert transfer record into transfers table
 		 * 2. update the balances for sender and user

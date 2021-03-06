@@ -94,7 +94,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewTransferHistory() {	
 		Integer userId = currentUser.getUser().getId();
 		Transfer[] allTransfers = userService.allTransfers(userId);
-		
+		if (allTransfers.length != 0) {
 		System.out.println("Transfer ID    From    To    Amount");
 		System.out.println("-----------------------------------");
 		for (Transfer eachTransfer : allTransfers) {
@@ -104,7 +104,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			System.out.print(eachTransfer.getAmount() + "     ");
 			System.out.println();
 		}
-		
+		}
+		else {
+			int UserResponse = console.getUserInputInteger("No transfer history.  Press 0 to return to Main Menu");
+		 if (UserResponse == 0) {
+			mainMenu(); 
+		 }}
 		
 		Integer requestTransferId = 
 				console.getUserInputInteger("Select transfer ID to view Transfer details");
@@ -138,19 +143,42 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		
 		//new transferobject so client can pass it in the userService
 		Transfer transferReq = new Transfer();//make a new tranfer object to store values
-		Integer receiverId = console.getUserInputInteger("Select User Id to send money");
+		Integer receiverId = console.getUserInputInteger("Select User Id to send money, or 0 to return to main menu");
+		
+		if (receiverId == 0) {
+			mainMenu();
+		}
+		
+		
 		Integer senderUserId = currentUser.getUser().getId();
 		Double amount = console.getUserInputDouble("How much do you want to send?");
 		//getting user inputs and store them as variables 
-		
+
 		transferReq.setFromUserId(senderUserId);
 		transferReq.setToUserId(receiverId);
 		transferReq.setAmount(amount);
 		//store the user's inputs inside the tranfer so we can pass it in userService
+		Integer userId = currentUser.getUser().getId();
 		
-		userService.sendBucks(transferReq);
+		Double balance = userService.getAccountBalance(userId);
 		
-	}
+		if (balance >= amount) {
+			userService.sendBucks(transferReq);
+		} else {
+		System.out.println("Insufficient Funds.  Choose a different amount or press 0 to return to main menu");
+		}
+		if (receiverId == 0) {
+			mainMenu();
+		}
+		
+//		try {
+//			userService.sendBucks(transferReq);
+//		} catch (InsufficientFundsException ex) {
+		
+		
+		
+		}
+	
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
