@@ -76,30 +76,25 @@ public class UserService {
 	
 	
 	//send transfer request?? takes user input of user id and amount to server side 
+	//passing an entire transfer object over 
+	//a transfer object will have all info (from user id, to user id, amount)
 	public void sendBucks(Transfer transfer) {   //do we need the receiver's id??
-		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(AUTH_TOKEN);
 		
+		//this combines the header with the body (tranfer object)
 		HttpEntity <Transfer> entity = new HttpEntity<>(transfer, headers);
 		
 		String url = BASE_URL + "/transfer/" + transfer.getFromUserId();
 		
 		restTemplate.postForObject(url, entity, Transfer.class);
 
-		
-		
+			
 	}
-	//user and id to be passed in
-	//public void transferMoney(AuthenticatedUser currentUser, Long recipentId)
-	//HttpEntity entity = createRequestEntity(currentUser); need to make an HTTP helper method
-	//Long userId = currentUser.getUser().getId();
-	//createTransfer(entity, recipientId);
+
 	
-	
-	
-	
+
 	
 	
 	private HttpEntity makeAuthEntity() {

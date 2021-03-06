@@ -44,8 +44,9 @@ public class TransfersController {
 	//client-userservice-sendbucks
 	@RequestMapping(path = "/transfer/{id}", method = RequestMethod.POST)
 	public void sendTransfer (@RequestBody Transfer transfer, @PathVariable Long id, Long receiverId, Double amount) {
+								//requests the entire JSON object from the client
 		
-		 transferServices.createTransfer(transfer.getToUserId(), transfer.getFromUserId(), transfer.getAmount()); //from userId
+		 transferServices.createTransfer(transfer.getFromUserId(), transfer.getToUserId(), transfer.getAmount()); //from userId
 		
 	}
 	/*

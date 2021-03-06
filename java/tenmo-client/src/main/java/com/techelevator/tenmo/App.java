@@ -136,14 +136,17 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			System.out.println();
 		}
 		
-		Transfer transferReq = new Transfer();
+		//new transferobject so client can pass it in the userService
+		Transfer transferReq = new Transfer();//make a new tranfer object to store values
 		Integer receiverId = console.getUserInputInteger("Select User Id to send money");
 		Integer senderUserId = currentUser.getUser().getId();
 		Double amount = console.getUserInputDouble("How much do you want to send?");
+		//getting user inputs and store them as variables 
 		
 		transferReq.setFromUserId(senderUserId);
 		transferReq.setToUserId(receiverId);
 		transferReq.setAmount(amount);
+		//store the user's inputs inside the tranfer so we can pass it in userService
 		
 		userService.sendBucks(transferReq);
 		
