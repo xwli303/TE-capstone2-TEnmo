@@ -90,21 +90,20 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		System.out.println("Your current account balance is: " + balance);
 		
 	}
-
+	
+	
 	private void viewTransferHistory() {	
 		Integer userId = currentUser.getUser().getId();
 		Transfer[] allTransfers = userService.allTransfers(userId);
 		if (allTransfers.length != 0) {
-		System.out.println("Transfer ID    From    To    Amount");
-		System.out.println("-----------------------------------");
+		System.out.printf("%-10s %-10s %-10s %-10s %n", "Transfer ID", "From", "To", "Amount");
+		System.out.println("--------------------------------------------");
 		for (Transfer eachTransfer : allTransfers) {
-			System.out.print(eachTransfer.getTransferId() + "           ");
-			System.out.print(eachTransfer.getFromUsername() + "     ");
-			System.out.print(eachTransfer.getToUsername() + "     " );
-			System.out.print(eachTransfer.getAmount() + "     ");
+			System.out.printf("%-10s %-10s %-10s %-10s %n", eachTransfer.getTransferId(), 
+					eachTransfer.getFromUsername(), eachTransfer.getToUsername(), eachTransfer.getAmount());
 			System.out.println();
 		}
-		}
+	}
 		else {
 			int UserResponse = console.getUserInputInteger("No transfer history.  Press 0 to return to Main Menu");
 		 if (UserResponse == 0) {
@@ -133,13 +132,18 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
+		
+		
 		// TODO Auto-generated method stub
 		User[] user = userService.getAllUsers();
+		
+		System.out.printf("%-10s %-5s %n", "User Id", "Username");
+		System.out.println("-----------------------------------");
 		for (User eachUser : user) {
-			System.out.print(eachUser.getId() + "    ");
-			System.out.print(eachUser.getUsername());
-			System.out.println();
-		}
+			if (!eachUser.getId().equals(currentUser.getUser().getId())) {
+			System.out.printf("%-10s %-5s %n", eachUser.getId(), eachUser.getUsername());
+		}			
+		}System.out.println("-----------------------------------");
 		
 		//new transferobject so client can pass it in the userService
 		Transfer transferReq = new Transfer();//make a new tranfer object to store values

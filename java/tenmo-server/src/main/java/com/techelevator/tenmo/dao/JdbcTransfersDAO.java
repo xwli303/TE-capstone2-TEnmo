@@ -53,20 +53,6 @@ public class JdbcTransfersDAO implements TransfersDAO{
 				+ "(SELECT account_id FROM accounts WHERE user_id = ?), ?)";
 		jdbcTemplate.update(sqlTransfer, userId, receiverId, amount);
 		
-		/* two parts with sql 
-		 * 1. insert transfer record into transfers table
-		 * 2. update the balances for sender and user
-		 */
-		
-		
-//	public void insertTranferRecord() {
-//		
-//	}
-
-		
-		
-		
-	 //return remaining balance?
 	}
 	
 	@Override
