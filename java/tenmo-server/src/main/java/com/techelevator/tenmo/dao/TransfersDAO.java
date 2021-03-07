@@ -15,13 +15,14 @@ public interface TransfersDAO {
 	
 	Transfer viewTransferDetails(Long transferId);
 	
-	
-	
 	//additionals
-//	List <Transfers> viewPendingRequests(); //check return type
-//	
-//	void requestTransfers(Long accountId); //request transfers
-//	
-//	boolean approveOrDenyTransfers (); //?? bool?
+	List <Transfer> viewPendingRequests(Long userId); //check return type
+
+	void requestBucks(Long userId, Long receiverId, Double amount);
+
+	
+	
+
+//	boolean approveOrDenyTransfers (); //bool?
 	
 }

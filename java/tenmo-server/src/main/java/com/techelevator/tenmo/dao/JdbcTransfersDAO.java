@@ -37,10 +37,9 @@ public class JdbcTransfersDAO implements TransfersDAO{
 	}
 
 	//create a transfer
-//	@Override
+	@Override
 	public void create(Long userId, Long receiverId, Double amount) {
-		//or should it return a transfer??
-//		//account from
+		//account from
 		String sqlFrom = "UPDATE accounts SET balance = (balance - ?) WHERE user_id = ?";
 		jdbcTemplate.update(sqlFrom,  amount, userId);
 		//account to
@@ -56,8 +55,7 @@ public class JdbcTransfersDAO implements TransfersDAO{
 	}
 	
 	@Override
-	public List<Transfer> viewTransfers(Long userId) {  //do we need to pass it through id?
-		// TODO Auto-generated method stub
+	public List<Transfer> viewTransfers(Long userId) { 
 		List<Transfer> transfersList = new ArrayList<>();
 		
 		String sql = "SELECT transfer_id, amount, transfer_type_desc, username AS From, "
@@ -99,6 +97,44 @@ public class JdbcTransfersDAO implements TransfersDAO{
 		}
 		return null;
 	}
+	
+	//additional - view pending
+	//additional methods
+	@Override
+	public List<Transfer> viewPendingRequests(Long userId) {
+		List<Transfer> pendingTransfers = new ArrayList<>();
+		String sql =
+				"SELECT transfer_id, amount, transfer_type_desc, "
+				+ "(SELECT username FROM users WHERE user_id = "
+				+ "(SELECT user_id FROM accounts WHERE account_id=t.account_to)) AS To FROM users u "
+				+ "JOIN accounts a ON a.user_id = u.user_id "
+				+ "JOIN transfers t ON t.account_from = a.account_id "
+				+ "JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id "
+				+ "JOIN transfer_statuses ts ON ts.transfer_status_id = t.transfer_status_id "
+				+ "WHERE u.user_id = ? and ts.transfer_status_desc = 'Pending'";
+		
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
+		
+			while(result.next()) {
+				Transfer transfer = new Transfer();
+				transfer.setTransferId(result.getLong("transfer_id"));
+				transfer.setAmount(result.getDouble("amount"));
+				transfer.setToUsername(result.getString("to"));
+				transfer.setTransferType(result.getString("transfer_type_desc"));
+				pendingTransfers.add(transfer);
+			}
+			return pendingTransfers;
+		
+	}
+	
+	public void requestBucks(Long userId, Long receiverId, Double amount) {
+	String sqlRequest = "INSERT INTO transfers (transfer_type_id, transfer_status_id, "
+			+ "account_from, account_to, amount) VALUES "
+			+ "(1, 1, (SELECT account_id FROM accounts WHERE user_id = ?),"
+			+ "(SELECT account_id FROM accounts WHERE user_id = ?), ?)";	
+	jdbcTemplate.update(sqlRequest, userId, receiverId, amount);
+		
+	}
 
 	
 	//maptorowset
@@ -131,35 +167,10 @@ public class JdbcTransfersDAO implements TransfersDAO{
 
 
 
+
+//additionals
 	
-	
-	//additional methods
-//	@Override
-//	public List<Transfers> viewPendingRequests() {
-//		// TODO Auto-generated method stub
-//		return null;
-	
-/*  SELECT transfer_id, amount, transfer_type_desc, transfer_status_desc, username AS From,
-(SELECT username FROM users WHERE user_id =
-(SELECT user_id FROM accounts WHERE account_id=t.account_to)) AS To FROM  users u
-JOIN accounts a ON a.user_id = u.user_id
-JOIN transfers t ON t.account_from = a.account_id
-JOIN transfer_types ty ON ty.transfer_type_id = t.transfer_type_id
-JOIN transfer_statuses ts ON ts.transfer_status_id = t.transfer_status_id
-WHERE u.user_id = 1001 and ts.transfer_status_desc = 'Pending';
-*/	
-//	}
-//
-	
-	
-	
-	
-//	@Override
-//	public void requestTransfers(Long accountId) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
+
 //	@Override
 //	public boolean approveOrDenyTransfers() {
 //		// TODO Auto-generated method stub

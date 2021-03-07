@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.InsufficientFundsException;
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.TransferExceptions;
 import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -32,7 +34,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
-
     private UserService userService;
     private User user;
     private Transfer transfer;
@@ -55,7 +56,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		System.out.println("*********************");
 		System.out.println("* Welcome to TEnmo! *");
 		System.out.println("*********************");
-		
 		registerAndLogin();
 		mainMenu();
 	}
@@ -64,15 +64,34 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		while(true) {
 			String choice = (String)console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			if(MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
-				viewCurrentBalance();
+				try {
+					viewCurrentBalance();
+				} catch (UserNotFoundException e) {
+					System.out.println("USER NOT FOUND");
+				}
 			} else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
-				viewTransferHistory();
+				
+						try {
+							viewTransferHistory();
+						} catch (TransferExceptions e) {
+							e.getMessage();
+						}
+					
 			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
 			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
-				sendBucks();
+				try {
+					sendBucks();
+				} catch (UserNotFoundException e) {
+					System.out.println("INVALID USER ID");
+				}
+					
 			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
-				requestBucks();
+				try {
+					requestBucks();
+				} catch (UserNotFoundException e) {
+					System.out.println("INVALID USER ID");;
+				}
 			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
 			} else {
@@ -82,88 +101,110 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		}
 	}
 
-	private void viewCurrentBalance() {
-		
+	private void viewCurrentBalance() throws UserNotFoundException {		
 		Integer userId = currentUser.getUser().getId();
-		Double balance = userService.getAccountBalance(userId);
+		Double balance;
+		balance = userService.getAccountBalance(userId);
 		
 		System.out.println("Your current account balance is: " + balance);
-		
 	}
-	
-	
-	private void viewTransferHistory() {	
+
+	private void viewTransferHistory() throws TransferExceptions  {	
 		Integer userId = currentUser.getUser().getId();
-		Transfer[] allTransfers = userService.allTransfers(userId);
-		if (allTransfers.length != 0) {
-		System.out.printf("%-10s %-10s %-10s %-10s %n", "Transfer ID", "From", "To", "Amount");
-		System.out.println("--------------------------------------------");
-		for (Transfer eachTransfer : allTransfers) {
-			System.out.printf("%-10s %-10s %-10s %-10s %n", eachTransfer.getTransferId(), 
-					eachTransfer.getFromUsername(), eachTransfer.getToUsername(), eachTransfer.getAmount());
-			System.out.println();
+		Transfer[] allTransfers;
+		try {
+			allTransfers = userService.allTransfers(userId);
+		
+			if (allTransfers.length != 0) {
+				System.out.println("------------------------------------------------");
+				System.out.printf("%-15s %-10s %-10s %10s %n", "Transfer ID", "From", "To", "Amount");
+				System.out.println("------------------------------------------------");
+				for (Transfer eachTransfer : allTransfers) {
+					System.out.printf("%-15s %-10s %-10s %10s %n", eachTransfer.getTransferId(), 
+							eachTransfer.getFromUsername(), eachTransfer.getToUsername(), eachTransfer.getAmount());
+				}
+			}
+			else {
+				int UserResponse = console.getUserInputInteger("No transfer history.  Press 0 to return to Main Menu");
+			 if (UserResponse == 0) {
+				mainMenu(); 
+			 }
+			}
+		} catch (TransferExceptions e) {
+			System.out.println("INVALID USER ID");;
 		}
-	}
-		else {
-			int UserResponse = console.getUserInputInteger("No transfer history.  Press 0 to return to Main Menu");
-		 if (UserResponse == 0) {
-			mainMenu(); 
-		 }}
 		
 		Integer requestTransferId = 
-				console.getUserInputInteger("Select transfer ID to view Transfer details");
+				console.getUserInputInteger("Select transfer ID to view Transfer details or 0 to return to main menu: ");
+		if (requestTransferId == 0){
+			mainMenu();
+		}
 		if (requestTransferId != null) {
-			Transfer transfer = userService.transferDetails(userId, requestTransferId);
-			System.out.println("Transfer Details");
-			System.out.println("-----------------------------------");
-			System.out.println("ID: " + transfer.getTransferId());
-			System.out.println("From: " + transfer.getFromUsername());
-			System.out.println("To: " + transfer.getToUsername());
-			System.out.println("Type: " + transfer.getTransferType());
-			System.out.println("Status: " + transfer.getTransferStatus());
-			System.out.println("Amount: " + transfer.getAmount());
+			Transfer transfer;
+			try {
+				transfer = userService.transferDetails(userId, requestTransferId);
+				System.out.println("-----------------------------------");
+				System.out.println("Transfer Details");
+				System.out.println("-----------------------------------");
+				System.out.printf("%-10s %-10s %n", "ID: ", transfer.getTransferId());
+				System.out.printf("%-10s %-10s %n", "From: ", transfer.getFromUsername());
+				System.out.printf("%-10s %-10s %n", "To: ", transfer.getToUsername());
+				System.out.printf("%-10s %-10s %n", "Type: ",transfer.getTransferType());
+				System.out.printf("%-10s %-10s %n", "Status: ",transfer.getTransferStatus());
+				System.out.printf("%-10s %-10s %n", "Amount: ",transfer.getAmount());
+			
+			} catch (NullPointerException e) {
+				System.out.println("INVALID TRANSFER ID");
+			}
 		}
 		
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
+		Integer userId = currentUser.getUser().getId();
+		Transfer[] pendingTransfers;
+		try {
+			pendingTransfers = userService.viewPendingTransfers(userId);
+			if (pendingTransfers.length != 0) {
+				System.out.println("--------------------------------------------");
+				System.out.println("Pending Transfers");
+				System.out.println("--------------------------------------------");
+				System.out.printf("%-15s %-10s %10s %n", "Pending ID", "To", "Amount");
+		
+				for (Transfer eachTransfer : pendingTransfers) {
+					System.out.printf("%-15s %-10s %10s %n", eachTransfer.getTransferId(), 
+							 eachTransfer.getToUsername(), eachTransfer.getAmount());
+				}
+			}
+			else {
+				int UserResponse = console.getUserInputInteger("No transfer history.  Press 0 to return to Main Menu");
+			 if (UserResponse == 0) {
+				mainMenu(); 
+			 }
+			}
+		} catch (TransferExceptions e) {
+			e.getMessage();;
+		}
 		
 	}
 
-	private void sendBucks() {
-		
-		
-		// TODO Auto-generated method stub
-		User[] user = userService.getAllUsers();
-		
-		System.out.printf("%-10s %-5s %n", "User Id", "Username");
-		System.out.println("-----------------------------------");
-		for (User eachUser : user) {
-			if (!eachUser.getId().equals(currentUser.getUser().getId())) {
-			System.out.printf("%-10s %-5s %n", eachUser.getId(), eachUser.getUsername());
-		}			
-		}System.out.println("-----------------------------------");
-		
-		//new transferobject so client can pass it in the userService
+	private void sendBucks() throws UserNotFoundException  {
+		printAllUsers();  //i put this method after requestbucks
+			
 		Transfer transferReq = new Transfer();//make a new tranfer object to store values
 		Integer receiverId = console.getUserInputInteger("Select User Id to send money, or 0 to return to main menu");
-		
 		if (receiverId == 0) {
 			mainMenu();
 		}
 		
-		
 		Integer senderUserId = currentUser.getUser().getId();
 		Double amount = console.getUserInputDouble("How much do you want to send?");
 		//getting user inputs and store them as variables 
-
 		transferReq.setFromUserId(senderUserId);
 		transferReq.setToUserId(receiverId);
 		transferReq.setAmount(amount);
-		//store the user's inputs inside the tranfer so we can pass it in userService
-		Integer userId = currentUser.getUser().getId();
 		
+		Integer userId = currentUser.getUser().getId();
 		Double balance = userService.getAccountBalance(userId);
 		
 		if (balance >= amount) {
@@ -173,21 +214,43 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		}
 		if (receiverId == 0) {
 			mainMenu();
-		}
-		
-//		try {
-//			userService.sendBucks(transferReq);
-//		} catch (InsufficientFundsException ex) {
-		
-		
 		
 		}
-	
+	}
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
+	private void requestBucks() throws UserNotFoundException {//throws UserNotFoundException {
+		printAllUsers();
+		Transfer transferReq = new Transfer();
+		Integer receiverId = console.getUserInputInteger("Select User Id to request money, or 0 to return to main menu");
+		if (receiverId == 0) {
+			mainMenu();
+		}
+		
+		Integer senderUserId = currentUser.getUser().getId();
+		Double amount = console.getUserInputDouble("How much are you requesting?");
+		transferReq.setFromUserId(senderUserId);
+		transferReq.setToUserId(receiverId);
+		transferReq.setAmount(amount);
+	
+		userService.requestBucks(transferReq);
 		
 	}
+	
+	public void printAllUsers() throws UserNotFoundException {
+		User[] user = userService.getAllUsers();
+		
+		System.out.printf("%-10s %-5s %n", "User Id", "Username");
+		System.out.println("-----------------------------------");
+		for (User eachUser : user) {
+			if (!eachUser.getId().equals(currentUser.getUser().getId())) {
+				System.out.printf("%-10s %-5s %n", eachUser.getId(), eachUser.getUsername());
+			}			
+		}
+		System.out.println("-----------------------------------");
+	}
+	
+	
+	
 	
 	private void exitProgram() {
 		System.exit(0);

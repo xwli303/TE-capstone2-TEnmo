@@ -16,9 +16,7 @@ import com.techelevator.tenmo.model.Transfer;
 
 
 @RestController
-//@PreAuthorize("isAuthenticated()")
 public class TransfersController {
-	
 	private TransfersServices transferServices;
 
 	public TransfersController (TransfersServices transferServices) {
@@ -37,25 +35,23 @@ public class TransfersController {
 	
 	@RequestMapping(path = "/users/{id}/{transferId}", method = RequestMethod.GET)
 	public Transfer transferDetails (@Valid @PathVariable Long id, @PathVariable Long transferId) {
-		return transferServices.viewTransferDetails(id, transferId);
-		
+		return transferServices.viewTransferDetails(id, transferId);	
 	}
 	
-	//client-userservice-sendbucks
 	@RequestMapping(path = "/transfer/{id}", method = RequestMethod.POST)
 	public void sendTransfer (@RequestBody Transfer transfer, @PathVariable Long id, Long receiverId, Double amount) {
-								//requests the entire JSON object from the client
-		
 		 transferServices.createTransfer(transfer.getFromUserId(), transfer.getToUserId(), transfer.getAmount()); //from userId
 		
 	}
-	/*
-	 * @RequestMapping(method=RequestMethod.POST, value = "/login")
-public ResponseEntity<String> login(@RequestBody String jsonStr) {
-    System.out.println("jsonStr  " + jsonStr);
-    JSONObject jsonObject = new JSONObject(jsonStr);
-    String username = jsonObject.getString("username");
-    return new ResponseEntity<String>(username, HttpStatus.OK);
-}  
-	 */
+	
+	@RequestMapping(path = "/transfer/{id}/pending-transfers", method = RequestMethod.GET)
+	public List<Transfer> pendingTransfers(@PathVariable Long id){
+		return transferServices.viewPendingRequests(id);
+	}
+	
+	@RequestMapping(path = "{id}/transfer/request-bucks", method = RequestMethod.POST)
+	public void requestBucks (@RequestBody Transfer transfer, @PathVariable Long id, Long toUserId, Double amount) {
+		transferServices.createRequestForBucks(transfer.getFromUserId(), transfer.getToUserId(), transfer.getAmount());
+	}
+
 }

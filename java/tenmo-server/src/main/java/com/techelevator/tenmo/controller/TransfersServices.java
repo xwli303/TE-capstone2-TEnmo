@@ -12,8 +12,6 @@ import com.techelevator.tenmo.model.Transfer;
 
 @Service
 public class TransfersServices {
-
-	
 	private TransfersDAO transfersDAO;
 	private AccountDAO accountDAO;
 	
@@ -22,22 +20,9 @@ public class TransfersServices {
 		this.accountDAO = accountDAO;
 	}
 	
-	@Transactional
-
-	public Double transferMoney(Account account) throws InsufficientFundsException {
-		Double fromBalance = accountDAO.getBalance(account.getUserId());
-		
-		fromBalance -= account.getBalance();
-		
-		return null; //not done
-		
-	}
-	
 	public Double viewBalances (Long id) {
 		return transfersDAO.viewBalance(id);
-		
 	}
-	
 	
 	public List<Transfer> viewTransfers(Long userId){
 		return transfersDAO.viewTransfers(userId);
@@ -46,12 +31,18 @@ public class TransfersServices {
 	public Transfer viewTransferDetails (Long userId, Long transferId) {
 		return transfersDAO.viewTransferDetails(transferId);
 	}
-
-	//sender id, receiver id, amount 
+	
+	@Transactional
 	public void createTransfer(Long userId, Long receiverId, Double amount) {
 		transfersDAO.create(userId, receiverId, amount);		
-	
-		
 	}
 	
+	List<Transfer> viewPendingRequests(Long userId){
+		return transfersDAO.viewPendingRequests(userId);
+	}
+
+	public void createRequestForBucks(Long id, Long toUserId, Double amount) {
+		transfersDAO.requestBucks(id, toUserId,amount);
+		
+	}
 }
